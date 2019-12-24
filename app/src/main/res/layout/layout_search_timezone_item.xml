@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:animateLayoutChanges="true"
+    android:background="?selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <TextView
+        android:id="@+id/search_timezone_info_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:textAppearance="@style/TextSecondaryBlack"
+        tools:text="GMT+7" />
+
+    <ImageView
+        android:id="@+id/search_timezone_select_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_check"
+        android:tint="@color/color_accent" />
+
+    <TextView
+        android:id="@+id/search_timezone_id_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@id/search_timezone_info_text_view"
+        android:textAppearance="@style/TextMediumBlack"
+        tools:text="Los Angeles" />
+
+</RelativeLayout>

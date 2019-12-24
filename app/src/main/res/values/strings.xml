@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">SimpleClock</string>
+
+    <!-- clock detail fragment -->
+    <string name="alarm_card_title">Alarm</string>
+    <string name="add_alarm_button_text">Add Alarm</string>
+    <string name="your_location_text">Your Location</string>
+
+    <!-- clock timezone list fragment-->
+    <string name="add_city_button_text">Add City</string>
+    <plurals name="hour_ahead_text">
+        <item quantity="one">%d Hour Ahead</item>
+        <item quantity="other">%d Hours Ahead</item>
+    </plurals>
+    <plurals name="hour_behind_text">
+        <item quantity="one">%d Hour Behind</item>
+        <item quantity="other">%d Hours Behind</item>
+    </plurals>
+    <string name="timezone_deleted_message">Deleted one timezone</string>
+    <string name="undo_timezone_deletion_text">Undo</string>
+    <string name="cannot_delete_primary_message">Cannot delete primary timezone</string>
+    <string name="delete_dialog_title">Delete Timezone</string>
+    <string name="delete_dialog_message">Do you want to delete this timezone?</string>
+
+    <!-- search timezone fragment-->
+    <string name="search_timezone_query_hint">Search City</string>
+    <string name="cannot_deselect_primary_message">Cannot deselect primary timezone</string>
+    <string name="progress_bar_text">Updating&#8230;</string>
+
+</resources>

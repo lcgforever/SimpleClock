@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main_clock"
+    app:startDestination="@id/mainClockFragment">
+
+    <fragment
+        android:id="@+id/mainClockFragment"
+        android:name="com.chenguang.simpleclock.clock.MainClockFragment"
+        android:label="fragment_main_clock"
+        tools:layout="@layout/fragment_main_clock">
+        <action
+            android:id="@+id/action_mainClockFragment_to_searchTimezoneActivity"
+            app:destination="@id/searchTimezoneActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/searchTimezoneActivity"
+        android:name="com.chenguang.simpleclock.searchtimezone.SearchTimezoneActivity"
+        android:label="SearchTimezoneActivity" />
+
+</navigation>

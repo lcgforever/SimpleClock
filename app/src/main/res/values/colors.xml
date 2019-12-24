@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#D37FFB</color>
+    <color name="color_primary_dark">#6200EE</color>
+    <color name="color_accent">#3DCDED</color>
+    <color name="color_main_bg_bottom">#20A4EF</color>
+    <color name="color_alarm_button_left">#3D84ED</color>
+    <color name="color_text_primary">#414141</color>
+    <color name="color_city_button_bg">#2B000000</color>
+    <color name="color_dim_view_bg">#99000000</color>
+</resources>

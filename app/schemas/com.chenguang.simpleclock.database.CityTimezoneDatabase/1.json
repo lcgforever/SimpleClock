@@ -1,0 +1,64 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "df6c9ab3d5c3590f8d0c09fd5615d4fe",
+    "entities": [
+      {
+        "tableName": "city_timezone",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timezone_id` TEXT NOT NULL, `city_name` TEXT NOT NULL, `timezone_info` TEXT NOT NULL, `hour_diff` INTEGER NOT NULL, `add_timestamp` INTEGER NOT NULL, `is_primary` INTEGER NOT NULL, PRIMARY KEY(`timezone_id`))",
+        "fields": [
+          {
+            "fieldPath": "timezoneId",
+            "columnName": "timezone_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cityName",
+            "columnName": "city_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timezoneInfo",
+            "columnName": "timezone_info",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hourDiff",
+            "columnName": "hour_diff",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "addTimestamp",
+            "columnName": "add_timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isPrimary",
+            "columnName": "is_primary",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "timezone_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'df6c9ab3d5c3590f8d0c09fd5615d4fe')"
+    ]
+  }
+}

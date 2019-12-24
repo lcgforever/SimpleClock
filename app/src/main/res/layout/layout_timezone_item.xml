@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:animateLayoutChanges="true"
+    android:background="?attr/selectableItemBackground"
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp"
+    tools:background="@color/color_primary">
+
+    <TextView
+        android:id="@+id/timezone_item_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:textAppearance="@style/TextPrimaryWhite"
+        tools:text="11:29 PM" />
+
+    <ImageView
+        android:id="@+id/timezone_item_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_clock" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="24dp"
+        android:layout_toStartOf="@id/timezone_item_time_text_view"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:id="@+id/timezone_item_city_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextPrimaryWhite"
+            tools:text="Los Angeles" />
+
+        <TextView
+            android:id="@+id/timezone_item_detail_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextSecondaryWhite"
+            tools:text="3 Hours Behind" />
+
+    </LinearLayout>
+
+</RelativeLayout>

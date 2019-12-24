@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?colorControlHighlight">
+
+    <item>
+        <shape>
+            <corners android:radius="6dp" />
+            <gradient
+                android:angle="0"
+                android:endColor="@color/color_accent"
+                android:startColor="@color/color_alarm_button_left"
+                android:type="linear" />
+        </shape>
+    </item>
+
+</ripple>

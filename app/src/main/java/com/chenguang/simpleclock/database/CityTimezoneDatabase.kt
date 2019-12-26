@@ -2,9 +2,13 @@ package com.chenguang.simpleclock.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
-@Database(entities = [CityTimezone::class], version = 1)
+@Database(entities = [CityTimezoneEntity::class, AlarmEntity::class], version = 1)
+@TypeConverters(value = [UriStringConverter::class])
 abstract class CityTimezoneDatabase : RoomDatabase() {
 
     abstract fun getCityTimezoneDao(): CityTimezoneDao
+
+    abstract fun getAlarmDao(): AlarmDao
 }

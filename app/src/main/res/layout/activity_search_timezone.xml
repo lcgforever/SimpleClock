@@ -6,8 +6,8 @@
     android:animateLayoutChanges="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:paddingTop="24dp"
-    android:paddingBottom="48dp">
+    android:paddingTop="@dimen/padding_status_bar"
+    android:paddingBottom="@dimen/padding_navigation_bar">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_timezone_activity_search_view"

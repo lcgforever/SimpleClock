@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/padding_navigation_bar"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.chenguang.simpleclock.addalarm.AddAlarmActivity">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_alarm_activity_done_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:elevation="4dp"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TimePicker
+        android:id="@+id/add_alarm_activity_time_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:timePickerMode="clock"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/add_alarm_activity_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:background="?attr/selectableItemBackground"
+        android:padding="8dp"
+        android:scaleType="fitXY"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/add_alarm_activity_alarm_title_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="24dp"
+        android:hint="@string/alarm_title_edit_text_hint"
+        android:imeOptions="actionDone"
+        android:inputType="textCapWords"
+        android:maxLines="1"
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_time_picker" />
+
+    <TextView
+        android:id="@+id/add_alarm_activity_repeat_option_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/repeat_option_text"
+        android:textAppearance="@style/TextMediumBlack"
+        android:textColor="@color/color_accent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_alarm_title_edit_text" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/add_alarm_activity_repeat_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingStart="@dimen/alarm_repeat_option_parent_padding"
+        android:paddingEnd="@dimen/alarm_repeat_option_parent_padding"
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_repeat_option_text" />
+
+    <TextView
+        android:id="@+id/add_alarm_activity_sound_option_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/sound_option_text"
+        android:textAppearance="@style/TextMediumBlack"
+        android:textColor="@color/color_accent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_repeat_recycler_view" />
+
+    <FrameLayout
+        android:id="@+id/add_alarm_activity_sound_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="24dp"
+        android:animateLayoutChanges="true"
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_sound_option_text">
+
+        <ProgressBar
+            android:id="@+id/add_alarm_activity_load_sound_progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/add_alarm_activity_no_sound_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_available_sound_text"
+            android:textAppearance="@style/TextMediumBlack"
+            android:visibility="gone" />
+
+        <Spinner
+            android:id="@+id/add_alarm_activity_sound_spinner"
+            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_sound_option_text" />
+
+    </FrameLayout>
+
+    <include
+        layout="@layout/layout_progress_bar"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

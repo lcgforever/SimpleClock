@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chenguang.simpleclock.R
 import com.chenguang.simpleclock.clock.BaseClockFragment
 import com.chenguang.simpleclock.model.ClockTimezone
+import com.chenguang.simpleclock.util.SwipeToDeleteCallback
 import com.chenguang.simpleclock.util.TimeFormatHelper
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
@@ -136,7 +137,7 @@ class ClockTimezoneListFragment(
                     clock_timezone_list_fragment_recycler_view,
                     R.string.timezone_deleted_message,
                     Snackbar.LENGTH_LONG
-                ).setAction(R.string.undo_timezone_deletion_text) {
+                ).setAction(R.string.undo_deletion_text) {
                     adapter.insertTimezoneAt(deletePosition, deleted)
                     viewModel.insertClockTimezone(deleted)
                 }.show()

@@ -1,4 +1,4 @@
-package com.chenguang.simpleclock.clock
+package com.chenguang.simpleclock.clock.mainclock
 
 import android.content.Context
 import android.os.Bundle
@@ -6,26 +6,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.chenguang.simpleclock.R
-import com.chenguang.simpleclock.clock.clocktimezone.ClockTimezoneListFragment
 import com.chenguang.simpleclock.clock.clockdetail.ClockDetailFragment
+import com.chenguang.simpleclock.clock.clocktimezone.ClockTimezoneListFragment
+import com.chenguang.simpleclock.model.AlarmData
+import com.chenguang.simpleclock.util.SwipeToDeleteCallback
 import com.chenguang.simpleclock.util.TimeFormatHelper
+import com.chenguang.simpleclock.util.cancelAlarm
 import com.chenguang.simpleclock.util.convertDpToPixel
+import com.chenguang.simpleclock.util.getAlarmCalendar
+import com.chenguang.simpleclock.util.scheduleAlarm
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_add_alarm_button
+import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_alarm_recycler_view
 import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_card_view
 import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_globe_image_view
 import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_indicator_1
 import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_indicator_2
 import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_view_pager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 /**
  * Fragment class handling main clock page content
  */
-class MainClockFragment : Fragment() {
+class MainClockFragment : Fragment(), MainClockAlarmItemAdapter.AlarmItemListener {
 
     companion object {
         private const val TRANSLATION_Y = 2000F
@@ -33,6 +49,11 @@ class MainClockFragment : Fragment() {
 
     @Inject
     lateinit var timeFormatHelper: TimeFormatHelper
+
+    @Inject
+    lateinit var viewModel: MainClockFragmentViewModel
+
+    private lateinit var alarmAdapter: MainClockAlarmItemAdapter
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -93,6 +114,62 @@ class MainClockFragment : Fragment() {
             }
         )
         main_clock_fragment_view_pager.currentItem = 0
+
+        main_clock_fragment_add_alarm_button.setOnClickListener {
+            findNavController().navigate(R.id.action_mainClockFragment_to_addAlarmActivity)
+        }
+
+        main_clock_fragment_alarm_recycler_view.layoutManager = LinearLayoutManager(context!!)
+        alarmAdapter = MainClockAlarmItemAdapter(context!!)
+        main_clock_fragment_alarm_recycler_view.adapter = alarmAdapter
+        val itemTouchHelper = ItemTouchHelper(AlarmSwipeToDeleteCallback(context!!))
+        itemTouchHelper.attachToRecyclerView(main_clock_fragment_alarm_recycler_view)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        alarmAdapter.initialize(this)
+        lifecycleScope.launch(Dispatchers.Main) {
+            val alarmDataList = viewModel.loadAllAlarms()
+            alarmAdapter.updateAlarmDataList(alarmDataList)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        alarmAdapter.cleanup()
+    }
+
+    override fun onAlarmStatusChanged(alarmData: AlarmData, enabled: Boolean) {
+        viewModel.updateAlarmEnableStatus(alarmData.id, enabled)
+        if (enabled) {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = alarmData.timeMillis
+            val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
+            val alarmMinute = calendar.get(Calendar.MINUTE)
+            val repeatDays = alarmData.repeatDays
+            if (repeatDays.isEmpty()) {
+                val alarmCalendar = getAlarmCalendar(alarmHour, alarmMinute)
+                scheduleAlarm(
+                    applicationContext = context!!.applicationContext,
+                    alarmId = alarmData.id,
+                    alarmTime = alarmCalendar.timeInMillis,
+                    repeating = false
+                )
+            } else {
+                repeatDays.forEach {
+                    val alarmCalendar = getAlarmCalendar(alarmHour, alarmMinute, it)
+                    scheduleAlarm(
+                        applicationContext = context!!.applicationContext,
+                        alarmId = alarmData.id,
+                        alarmTime = alarmCalendar.timeInMillis,
+                        repeating = true
+                    )
+                }
+            }
+        } else {
+            cancelAlarm(context!!, alarmData.id)
+        }
     }
 
     inner class ClockFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -110,6 +187,23 @@ class MainClockFragment : Fragment() {
                     ClockTimezoneListFragment.newInstance(timeFormatHelper)
                 }
             }
+        }
+    }
+
+    inner class AlarmSwipeToDeleteCallback(context: Context) : SwipeToDeleteCallback(context) {
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val deletePosition = viewHolder.adapterPosition
+            val deleted = alarmAdapter.removeAlarmAt(deletePosition)
+            viewModel.deleteAlarmById(deleted.id)
+            Snackbar.make(
+                main_clock_fragment_alarm_recycler_view,
+                R.string.alarm_deleted_message,
+                Snackbar.LENGTH_LONG
+            ).setAction(R.string.undo_deletion_text) {
+                alarmAdapter.insertAlarmAt(deletePosition, deleted)
+                viewModel.insertAlarm(deleted)
+            }.show()
         }
     }
 }

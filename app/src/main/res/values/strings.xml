@@ -17,14 +17,46 @@
         <item quantity="other">%d Hours Behind</item>
     </plurals>
     <string name="timezone_deleted_message">Deleted one timezone</string>
-    <string name="undo_timezone_deletion_text">Undo</string>
+    <string name="undo_deletion_text">Undo</string>
     <string name="cannot_delete_primary_message">Cannot delete primary timezone</string>
     <string name="delete_dialog_title">Delete Timezone</string>
     <string name="delete_dialog_message">Do you want to delete this timezone?</string>
 
-    <!-- search timezone fragment-->
+    <!-- search timezone activity-->
     <string name="search_timezone_query_hint">Search City</string>
     <string name="cannot_deselect_primary_message">Cannot deselect primary timezone</string>
     <string name="progress_bar_text">Updating&#8230;</string>
+
+    <!-- add alarm activity -->
+    <string name="alarm_title_edit_text_hint">Enter Alarm Title</string>
+    <string name="default_alarm_title_text">Alarm</string>
+    <string name="alarm_title_edit_text_ime_id">Done</string>
+    <string name="repeat_option_text">Repeat Option</string>
+    <string name="sound_option_text">Sound Option</string>
+    <string name="no_available_sound_text">No alarm sound available</string>
+    <string name="no_sound_selection_text">No Sound</string>
+    <string-array name="repeat_day_options_array">
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+    </string-array>
+
+    <!-- alarm receiver -->
+    <string name="alarm_notification_text">Alarm triggered: %s</string>
+
+    <!-- main clock fragment -->
+    <string name="alarm_repeat_everyday_text">Everyday</string>
+    <string name="alarm_repeat_workday_text">Workday</string>
+    <string name="alarm_repeat_weekend_text">Weekend</string>
+    <string name="alarm_non_repeat_text">Non Repeat</string>
+    <string name="alarm_deleted_message">Deleted one alarm</string>
+
+    <!-- main clock activity -->
+    <string name="alarm_trigger_dialog_title">Alarm Triggered</string>
+    <string name="alarm_trigger_dialog_message">Your alarm triggered: %s</string>
 
 </resources>

@@ -3,10 +3,10 @@ package com.chenguang.simpleclock.dagger.module
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.chenguang.simpleclock.searchtimezone.SearchTimezoneActivity
-import com.chenguang.simpleclock.searchtimezone.SearchTimezoneActivityViewModel
 import com.chenguang.simpleclock.dagger.annotation.ActivityScope
 import com.chenguang.simpleclock.dagger.annotation.ViewModelKey
+import com.chenguang.simpleclock.searchtimezone.SearchTimezoneActivity
+import com.chenguang.simpleclock.searchtimezone.SearchTimezoneActivityViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -39,11 +39,11 @@ class SearchTimezoneActivityViewModelProviderModule {
     @Provides
     @ActivityScope
     fun provideViewModel(
-        fragment: SearchTimezoneActivity,
+        activity: SearchTimezoneActivity,
         factory: ViewModelProvider.Factory
     ): SearchTimezoneActivityViewModel {
         return ViewModelProviders.of(
-            fragment,
+            activity,
             factory
         )[SearchTimezoneActivityViewModel::class.java]
     }

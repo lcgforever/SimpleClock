@@ -8,7 +8,7 @@
             <gradient
                 android:angle="0"
                 android:endColor="@color/color_accent"
-                android:startColor="@color/color_alarm_button_left"
+                android:startColor="@color/color_dark_blue"
                 android:type="linear" />
         </shape>
     </item>

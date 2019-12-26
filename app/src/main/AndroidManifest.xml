@@ -5,14 +5,16 @@
     <application
         android:name=".SimpleClockApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_clock_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_clock_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".addalarm.AddAlarmActivity"></activity>
         <activity android:name=".searchtimezone.SearchTimezoneActivity" />
         <activity
             android:name=".clock.MainClockActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".addalarm.AlarmReceiver" />
     </application>
 
 </manifest>

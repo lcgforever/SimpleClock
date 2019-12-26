@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.chenguang.simpleclock.dagger.annotation.ForApplication
+import com.chenguang.simpleclock.database.AlarmDao
 import com.chenguang.simpleclock.database.CityTimezoneDao
 import com.chenguang.simpleclock.database.CityTimezoneDatabase
 import com.chenguang.simpleclock.database.timezoneToCityTimezone
@@ -53,7 +54,13 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabaseDao(database: CityTimezoneDatabase): CityTimezoneDao {
+    fun provideCityTimezoneDao(database: CityTimezoneDatabase): CityTimezoneDao {
         return database.getCityTimezoneDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlarmDao(database: CityTimezoneDatabase): AlarmDao {
+        return database.getAlarmDao()
     }
 }

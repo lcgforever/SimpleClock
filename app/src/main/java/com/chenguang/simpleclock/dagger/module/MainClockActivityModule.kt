@@ -11,7 +11,8 @@ import dagger.android.ContributesAndroidInjector
 @Module(
     includes = [
         MainClockFragmentModule::class,
-        SearchTimezoneActivityModule::class
+        SearchTimezoneActivityModule::class,
+        AddAlarmActivityModule::class
     ]
 )
 abstract class MainClockActivityModule {

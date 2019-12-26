@@ -13,6 +13,7 @@ import javax.inject.Singleton
 @Module(
     includes = [
         MainClockActivityModule::class,
+        AlarmReceiverModule::class,
         DatabaseModule::class
     ]
 )

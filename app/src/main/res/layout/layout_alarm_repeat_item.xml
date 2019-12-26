@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alarm_repeat_item_button"
+    android:layout_width="@dimen/alarm_repeat_option_item_size"
+    android:layout_height="@dimen/alarm_repeat_option_item_size"
+    android:layout_margin="@dimen/alarm_repeat_option_item_margin"
+    android:background="@drawable/bg_alarm_repeat_button"
+    android:textAppearance="@style/TextSecondaryBlack"
+    android:textColor="@color/color_alarm_repeat_button_text" />

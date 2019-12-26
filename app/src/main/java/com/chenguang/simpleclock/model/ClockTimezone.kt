@@ -1,6 +1,6 @@
 package com.chenguang.simpleclock.model
 
-import com.chenguang.simpleclock.database.CityTimezone
+import com.chenguang.simpleclock.database.CityTimezoneEntity
 
 /**
  * Domain data model to provide timezone and clock details
@@ -15,10 +15,10 @@ data class ClockTimezone(
 )
 
 /**
- * Helper method to convert domain model [ClockTimezone] to db model [CityTimezone]
+ * Helper method to convert domain model [ClockTimezone] to db model [CityTimezoneEntity]
  */
-fun ClockTimezone.toCityTimezone(): CityTimezone {
-    return CityTimezone(
+fun ClockTimezone.toCityTimezone(): CityTimezoneEntity {
+    return CityTimezoneEntity(
         timezoneId = timezoneId,
         timezoneInfo = timezoneInfo,
         hourDiff = hourDiff,

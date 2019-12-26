@@ -1,4 +1,4 @@
-package com.chenguang.simpleclock.clock.clocktimezone
+package com.chenguang.simpleclock.util
 
 import android.content.Context
 import android.graphics.Canvas
@@ -17,7 +17,7 @@ import kotlin.math.abs
  */
 abstract class SwipeToDeleteCallback(
     context: Context,
-    private val enableSwipePredicate: (RecyclerView.ViewHolder) -> Boolean
+    private val enableSwipePredicate: (RecyclerView.ViewHolder) -> Boolean = { true }
 ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete)!!

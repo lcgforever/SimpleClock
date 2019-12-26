@@ -9,19 +9,19 @@ import androidx.room.Query
 import androidx.room.Transaction
 
 /**
- * Room [Dao] class for [CityTimezone]
+ * Room [Dao] class for [CityTimezoneEntity]
  */
 @Dao
 abstract class CityTimezoneDao {
 
     @Query("SELECT * FROM city_timezone")
-    abstract fun getAllCityTimezoneListLiveData(): LiveData<List<CityTimezone>>
+    abstract fun getAllCityTimezoneListLiveData(): LiveData<List<CityTimezoneEntity>>
 
     @Query("SELECT * FROM city_timezone")
-    abstract fun getAllCityTimezoneList(): List<CityTimezone>
+    abstract fun getAllCityTimezoneList(): List<CityTimezoneEntity>
 
     @Query("SELECT * FROM city_timezone WHERE is_primary = 1")
-    abstract fun getPrimaryCityTimezoneLiveData(): LiveData<CityTimezone>
+    abstract fun getPrimaryCityTimezoneLiveData(): LiveData<CityTimezoneEntity>
 
     @Query("UPDATE city_timezone SET is_primary = :isPrimary WHERE timezone_id = :id")
     abstract fun updateCityTimezonePrimaryStatus(id: String, isPrimary: Boolean)
@@ -30,10 +30,10 @@ abstract class CityTimezoneDao {
     abstract fun deleteByTimezoneId(id: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertCityTimezones(vararg cityTimezones: CityTimezone)
+    abstract fun insertCityTimezones(vararg cityTimezones: CityTimezoneEntity)
 
     @Delete
-    abstract fun deleteCityTimezones(vararg cityTimezone: CityTimezone)
+    abstract fun deleteCityTimezones(vararg cityTimezone: CityTimezoneEntity)
 
     @Transaction
     open fun updatePrimaryCityTimezone(
@@ -45,7 +45,10 @@ abstract class CityTimezoneDao {
     }
 
     @Transaction
-    open fun updateCityTimezones(toDelete: List<CityTimezone>, toInsert: List<CityTimezone>) {
+    open fun updateCityTimezones(
+        toDelete: List<CityTimezoneEntity>,
+        toInsert: List<CityTimezoneEntity>
+    ) {
         deleteCityTimezones(*toDelete.toTypedArray())
         insertCityTimezones(*toInsert.toTypedArray())
     }

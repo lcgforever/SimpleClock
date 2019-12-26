@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_main_clock"
-    tools:context=".clock.MainClockFragment">
+    tools:context=".clock.mainclock.MainClockFragment">
 
     <ImageView
         android:id="@+id/main_clock_fragment_globe_image_view"
@@ -63,7 +63,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingStart="24dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,7 +91,7 @@
                 android:textAppearance="@style/TextButtonWhite" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/main_clock_fragment_recycler_view"
+                android:id="@+id/main_clock_fragment_alarm_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" />

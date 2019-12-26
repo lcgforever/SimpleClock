@@ -1,6 +1,6 @@
 package com.chenguang.simpleclock.model
 
-import com.chenguang.simpleclock.database.CityTimezone
+import com.chenguang.simpleclock.database.CityTimezoneEntity
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -49,12 +49,12 @@ fun timezoneIdToTimezoneInfo(timezoneId: String): TimezoneInfo {
 /**
  * Helper method to convert domain model [TimezoneInfo] to db model [CityTimezone]
  */
-fun TimezoneInfo.toCityTimezone(): CityTimezone {
+fun TimezoneInfo.toCityTimezone(): CityTimezoneEntity {
     val timezone = TimeZone.getTimeZone(timezoneId)
     val hours = TimeUnit.MILLISECONDS.toHours(timezone.rawOffset.toLong())
     val slashIndex = timezoneId.indexOf('/')
     val cityName = timezoneId.substring(slashIndex + 1).replace('_', ' ')
-    return CityTimezone(
+    return CityTimezoneEntity(
         timezoneId = timezoneId,
         timezoneInfo = timezoneInfo,
         hourDiff = hours.toInt(),

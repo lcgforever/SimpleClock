@@ -60,9 +60,9 @@ class AddAlarmActivityViewModel @Inject constructor(
         }
     }
 
-    suspend fun insertAlarmList(alarmList: List<AlarmData>) {
+    suspend fun insertAlarm(alarmData: AlarmData) {
         return withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
-            alarmDao.insertAlarms(*alarmList.map { it.toAlarmEntity() }.toTypedArray())
+            alarmDao.insertAlarms(alarmData.toAlarmEntity())
         }
     }
 }

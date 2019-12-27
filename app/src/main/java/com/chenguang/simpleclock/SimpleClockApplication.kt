@@ -7,6 +7,9 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.work.Configuration
+import androidx.work.WorkManager
+import androidx.work.WorkerFactory
 import com.chenguang.simpleclock.dagger.component.DaggerApplicationComponent
 import com.chenguang.simpleclock.util.Constants
 import dagger.android.AndroidInjector
@@ -22,12 +25,21 @@ class SimpleClockApplication : Application(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
+    @Inject
+    lateinit var workerFactory: WorkerFactory
+
     override fun onCreate() {
         super.onCreate()
         DaggerApplicationComponent
             .factory()
             .create(this)
             .inject(this)
+
+        // Initialize worker manager with custom factory to enable worker dagger injection
+        WorkManager.initialize(
+            this,
+            Configuration.Builder().setWorkerFactory(workerFactory).build()
+        )
 
         // For API 26+, setup alarm notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

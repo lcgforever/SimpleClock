@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.chenguang.simpleclock.dagger.annotation.ForApplication
 import com.chenguang.simpleclock.database.AlarmDao
 import com.chenguang.simpleclock.database.CityTimezoneDao
-import com.chenguang.simpleclock.database.CityTimezoneDatabase
+import com.chenguang.simpleclock.database.ClockDatabase
 import com.chenguang.simpleclock.database.timezoneToCityTimezone
 import dagger.Module
 import dagger.Provides
@@ -27,10 +27,10 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ForApplication context: Context): CityTimezoneDatabase {
+    fun provideDatabase(@ForApplication context: Context): ClockDatabase {
         return Room.databaseBuilder(
             context,
-            CityTimezoneDatabase::class.java,
+            ClockDatabase::class.java,
             "city_timezone_db"
         ).addCallback(
             object : RoomDatabase.Callback() {
@@ -54,13 +54,13 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideCityTimezoneDao(database: CityTimezoneDatabase): CityTimezoneDao {
+    fun provideCityTimezoneDao(database: ClockDatabase): CityTimezoneDao {
         return database.getCityTimezoneDao()
     }
 
     @Provides
     @Singleton
-    fun provideAlarmDao(database: CityTimezoneDatabase): AlarmDao {
+    fun provideAlarmDao(database: ClockDatabase): AlarmDao {
         return database.getAlarmDao()
     }
 }

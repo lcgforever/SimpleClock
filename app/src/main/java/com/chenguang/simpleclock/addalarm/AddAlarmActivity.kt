@@ -11,11 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chenguang.simpleclock.R
 import com.chenguang.simpleclock.model.AlarmData
-import com.chenguang.simpleclock.model.AlarmRepeatDay
 import com.chenguang.simpleclock.model.AlarmSound
-import com.chenguang.simpleclock.util.getAlarmCalendar
+import com.chenguang.simpleclock.util.AlarmHelper
 import com.chenguang.simpleclock.util.hideKeyboard
-import com.chenguang.simpleclock.util.scheduleAlarm
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_alarm_title_edit_text
 import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_cancel_button
@@ -38,6 +36,9 @@ class AddAlarmActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModel: AddAlarmActivityViewModel
+
+    @Inject
+    lateinit var alarmHelper: AlarmHelper
 
     private lateinit var repeatDayAdapter: AlarmRepeatItemAdapter
     private lateinit var spinnerAdapter: ArrayAdapter<String>
@@ -68,8 +69,7 @@ class AddAlarmActivity : AppCompatActivity() {
         )
 
         add_alarm_activity_done_fab.setOnClickListener {
-            addAlarm()
-            finishAfterTransition()
+            addAlarmAndFinish()
         }
 
         add_alarm_activity_alarm_title_edit_text.setOnEditorActionListener { _, actionId, _ ->
@@ -121,56 +121,52 @@ class AddAlarmActivity : AppCompatActivity() {
         add_alarm_activity_sound_spinner.visibility = View.VISIBLE
     }
 
-    private fun addAlarm() {
+    private fun addAlarmAndFinish() {
         progress_bar_dim_view_container.visibility = View.VISIBLE
-        val alarmDataList = mutableListOf<AlarmData>()
 
-        // Schedule alarm based on repeat options
+        // Create alarm data with selected time, repeat option and sound
         val alarmHour = add_alarm_activity_time_picker.currentHour
         val alarmMinute = add_alarm_activity_time_picker.currentMinute
-        val selectedRepeatDays = repeatDayAdapter.getSelectedDays().sortedBy { it.id }
-        if (selectedRepeatDays.isEmpty()) {
-            // If not selected any repeat option, set for nearest time (today or tomorrow)
-            val calendar = getAlarmCalendar(alarmHour, alarmMinute)
-            val alarmData = createAlarmData(calendar.timeInMillis, selectedRepeatDays)
-            alarmDataList.add(alarmData)
-            scheduleAlarm(
-                applicationContext = applicationContext,
-                alarmId = alarmData.id,
-                alarmTime = calendar.timeInMillis,
-                repeating = false
-            )
-        } else {
-            selectedRepeatDays.forEach {
-                val calendar = getAlarmCalendar(alarmHour, alarmMinute, it)
-                val alarmData = createAlarmData(calendar.timeInMillis, selectedRepeatDays)
-                alarmDataList.add(alarmData)
-                scheduleAlarm(
-                    applicationContext = applicationContext,
-                    alarmId = alarmData.id,
-                    alarmTime = calendar.timeInMillis,
-                    repeating = true
-                )
-            }
-        }
+        val selectedRepeatDays = repeatDayAdapter.getSortedSelectedDayIdList()
+        val alarmTime = alarmHelper.getAvailableAlarmTime(alarmHour, alarmMinute)
+        val alarmData = createAlarmData(
+            timeMillis = alarmTime,
+            alarmHour = alarmHour,
+            alarmMinute = alarmMinute,
+            repeatDayIdList = selectedRepeatDays,
+            soundUri = selectedAlarmSoundUri
+        )
+
+        // Schedule alarm properly
+        alarmHelper.scheduleAlarmInBackground(applicationContext, alarmData)
 
         // Save alarm data to database
         lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.insertAlarmList(alarmDataList)
+            viewModel.insertAlarm(alarmData)
             progress_bar_dim_view_container.visibility = View.GONE
+            finishAfterTransition()
         }
     }
 
-    private fun createAlarmData(timeMillis: Long, repeatDays: List<AlarmRepeatDay>): AlarmData {
+    private fun createAlarmData(
+        timeMillis: Long,
+        alarmHour: Int,
+        alarmMinute: Int,
+        repeatDayIdList: List<Int>,
+        soundUri: Uri?
+    ): AlarmData {
         val alarmId = random.nextInt()
         val title = add_alarm_activity_alarm_title_edit_text.text?.toString()
         val alarmTitle = if (title.isNullOrEmpty()) defaultAlarmTitle else title
         return AlarmData(
             id = alarmId,
             title = alarmTitle,
+            createTimestamp = System.currentTimeMillis(),
             timeMillis = timeMillis,
-            soundUri = selectedAlarmSoundUri,
-            repeatDays = repeatDays,
+            alarmHour = alarmHour,
+            alarmMinute = alarmMinute,
+            soundUri = soundUri,
+            repeatDayIdList = repeatDayIdList,
             enabled = true
         )
     }

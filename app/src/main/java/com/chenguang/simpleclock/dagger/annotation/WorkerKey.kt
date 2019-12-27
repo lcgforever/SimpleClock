@@ -1,13 +1,10 @@
 package com.chenguang.simpleclock.dagger.annotation
 
-import androidx.lifecycle.ViewModel
+import androidx.work.Worker
 import dagger.MapKey
 import kotlin.reflect.KClass
 
-/**
- * Annotation for [ViewModel] key to register properly with view model factory
- */
 @MapKey
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class ViewModelKey(val value: KClass<out ViewModel>)
+annotation class WorkerKey(val value: KClass<out Worker>)

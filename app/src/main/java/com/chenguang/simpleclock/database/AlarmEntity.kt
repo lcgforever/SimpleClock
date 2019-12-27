@@ -5,8 +5,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.chenguang.simpleclock.model.AlarmData
-import com.chenguang.simpleclock.model.fromDayName
-import com.chenguang.simpleclock.util.Constants
 
 /**
  * Data model entity class for alarms
@@ -15,9 +13,12 @@ import com.chenguang.simpleclock.util.Constants
 data class AlarmEntity(
     @PrimaryKey val id: Int,
     val title: String,
+    @ColumnInfo(name = "create_timestamp") val createTimestamp: Long,
     @ColumnInfo(name = "time_millis") val timeMillis: Long,
+    @ColumnInfo(name = "alarm_hour") val alarmHour: Int,
+    @ColumnInfo(name = "alarm_minute") val alarmMinute: Int,
     @ColumnInfo(name = "sound_uri") val soundUri: Uri?,
-    @ColumnInfo(name = "repeat_days") val repeatDays: String,
+    @ColumnInfo(name = "repeat_days") val repeatDays: List<Int>,
     val enabled: Boolean
 )
 
@@ -28,9 +29,12 @@ fun AlarmEntity.toAlarmData(): AlarmData {
     return AlarmData(
         id = id,
         title = title,
+        createTimestamp = createTimestamp,
         timeMillis = timeMillis,
+        alarmHour = alarmHour,
+        alarmMinute = alarmMinute,
         soundUri = soundUri,
-        repeatDays = repeatDays.split(Constants.COMMA_SEPARATOR).map { fromDayName(it) },
+        repeatDayIdList = repeatDays,
         enabled = enabled
     )
 }

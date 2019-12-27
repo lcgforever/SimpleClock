@@ -49,10 +49,7 @@
     <string name="alarm_notification_text">Alarm triggered: %s</string>
 
     <!-- main clock fragment -->
-    <string name="alarm_repeat_everyday_text">Everyday</string>
-    <string name="alarm_repeat_workday_text">Workday</string>
-    <string name="alarm_repeat_weekend_text">Weekend</string>
-    <string name="alarm_non_repeat_text">Non Repeat</string>
+    <string name="alarm_repeat_day_text">S M T W T F S</string>
     <string name="alarm_deleted_message">Deleted one alarm</string>
 
     <!-- main clock activity -->

@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chenguang.simpleclock.R
-import com.chenguang.simpleclock.model.AlarmRepeatDay
-import com.chenguang.simpleclock.model.fromDayName
 import kotlinx.android.synthetic.main.layout_alarm_repeat_item.view.alarm_repeat_item_button
 
 /**
@@ -17,11 +15,12 @@ class AlarmRepeatItemAdapter(
     private val context: Context
 ) : RecyclerView.Adapter<AlarmRepeatItemAdapter.AlarmRepeatViewHolder>() {
 
-    private val repeatOptionList = mutableListOf<AlarmRepeatDay>().apply {
-        val dayNames = context.resources.getStringArray(R.array.repeat_day_options_array)
-        addAll(dayNames.map { fromDayName(it) })
-    }
-    private val selectedDaySet = mutableSetOf<AlarmRepeatDay>()
+    // We use index + 1 to make it 1-based here to match day id within Calendar
+    private val repeatDayNameList: List<Pair<Int, String>> =
+        context.resources.getStringArray(R.array.repeat_day_options_array)
+            .mapIndexed { index, name -> index + 1 to name }
+            .toList()
+    private val selectedDayIdSet = mutableSetOf<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmRepeatViewHolder {
         val view = LayoutInflater
@@ -31,27 +30,29 @@ class AlarmRepeatItemAdapter(
     }
 
     override fun onBindViewHolder(holder: AlarmRepeatViewHolder, position: Int) {
-        holder.bind(repeatOptionList[position])
+        holder.bind(repeatDayNameList[position])
     }
 
     override fun getItemCount(): Int {
-        return repeatOptionList.size
+        return repeatDayNameList.size
     }
 
-    fun getSelectedDays(): List<AlarmRepeatDay> {
-        return selectedDaySet.toList()
+    fun getSortedSelectedDayIdList(): List<Int> {
+        return selectedDayIdSet.toList().sorted()
     }
 
     inner class AlarmRepeatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(day: AlarmRepeatDay) {
-            itemView.alarm_repeat_item_button.text = day.name
+        fun bind(dayInfo: Pair<Int, String>) {
+            val dayId = dayInfo.first
+            val dayName = dayInfo.second
+            itemView.alarm_repeat_item_button.text = dayName
             itemView.alarm_repeat_item_button.setOnClickListener {
                 it.isSelected = !it.isSelected
                 if (it.isSelected) {
-                    selectedDaySet.add(day)
+                    selectedDayIdSet.add(dayId)
                 } else {
-                    selectedDaySet.remove(day)
+                    selectedDayIdSet.remove(dayId)
                 }
             }
         }

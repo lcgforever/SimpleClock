@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="64dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
 
@@ -19,25 +19,39 @@
         android:id="@+id/alarm_item_time_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/color_text_primary"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@id/alarm_item_switch"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/alarm_item_repeat_day_text_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="18:00 PM" />
 
     <TextView
-        android:id="@+id/alarm_item_option_text_view"
+        android:id="@+id/alarm_item_title_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:ellipsize="end"
         android:fontFamily="sans-serif-light"
-        android:textColor="@color/color_text_primary"
-        android:textSize="14sp"
+        android:textAppearance="@style/TextSecondaryBlack"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/alarm_item_switch"
+        app:layout_constraintEnd_toStartOf="@id/alarm_item_repeat_day_text_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/alarm_item_time_text_view"
-        tools:text="Everyday" />
+        tools:text="Test Alarm" />
+
+    <TextView
+        android:id="@+id/alarm_item_repeat_day_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:letterSpacing="0.2"
+        android:text="@string/alarm_repeat_day_text"
+        android:textAppearance="@style/TextSecondaryBlack"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/alarm_item_switch"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

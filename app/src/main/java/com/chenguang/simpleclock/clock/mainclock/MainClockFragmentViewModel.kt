@@ -30,7 +30,7 @@ class MainClockFragmentViewModel @Inject constructor(
             }
             // Then return non expired alarms
             allAlarms.removeAll(expiredAlarms)
-            allAlarms.map { it.toAlarmData() }
+            allAlarms.map { it.toAlarmData() }.sortedByDescending { it.createTimestamp }
         }
     }
 

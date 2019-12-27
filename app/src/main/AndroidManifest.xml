@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.chenguang.simpleclock">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".SimpleClockApplication"
@@ -10,7 +13,7 @@
         android:roundIcon="@drawable/ic_clock_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".addalarm.AddAlarmActivity"></activity>
+        <activity android:name=".addalarm.AddAlarmActivity" />
         <activity android:name=".searchtimezone.SearchTimezoneActivity" />
         <activity
             android:name=".clock.MainClockActivity"
@@ -18,12 +21,25 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <receiver android:name=".addalarm.AlarmReceiver" />
+        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".BootUpReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            android:exported="false"
+            tools:node="remove" />
     </application>
 
 </manifest>

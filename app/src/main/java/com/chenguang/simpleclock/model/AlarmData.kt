@@ -2,7 +2,6 @@ package com.chenguang.simpleclock.model
 
 import android.net.Uri
 import com.chenguang.simpleclock.database.AlarmEntity
-import com.chenguang.simpleclock.util.Constants
 
 /**
  * Domain model for alarm information
@@ -10,9 +9,12 @@ import com.chenguang.simpleclock.util.Constants
 data class AlarmData(
     val id: Int,
     val title: String,
+    val createTimestamp: Long,
     val timeMillis: Long,
+    val alarmHour: Int,
+    val alarmMinute: Int,
     val soundUri: Uri?,
-    val repeatDays: List<AlarmRepeatDay>,
+    val repeatDayIdList: List<Int>,
     var enabled: Boolean
 )
 
@@ -23,9 +25,12 @@ fun AlarmData.toAlarmEntity(): AlarmEntity {
     return AlarmEntity(
         id = id,
         title = title,
+        createTimestamp = createTimestamp,
         timeMillis = timeMillis,
+        alarmHour = alarmHour,
+        alarmMinute = alarmMinute,
         soundUri = soundUri,
-        repeatDays = repeatDays.joinToString(Constants.COMMA_SEPARATOR) { it.name },
+        repeatDays = repeatDayIdList,
         enabled = enabled
     )
 }

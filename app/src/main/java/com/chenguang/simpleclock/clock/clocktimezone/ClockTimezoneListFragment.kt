@@ -80,7 +80,7 @@ class ClockTimezoneListFragment(
             findNavController().navigate(R.id.action_mainClockFragment_to_searchTimezoneFragment)
         }
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             viewModel.loadPrimaryClockTimezone().observe(
                 this@ClockTimezoneListFragment,
                 Observer {
@@ -97,7 +97,7 @@ class ClockTimezoneListFragment(
         super.onStart()
         adapter.initialize(this)
         startUpdatingTime()
-        lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val selectedTimezoneList = viewModel.loadSelectedTimezoneList()
             adapter.updateClockTimezoneList(selectedTimezoneList)
         }

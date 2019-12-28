@@ -60,7 +60,7 @@ class SearchTimezoneFragment : Fragment(), SearchView.OnQueryTextListener {
             saveSelectedTimezoneListAndFinish()
         }
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val allTimezoneList = viewModel.loadAllTimezones()
             adapter.updateSearchCityList(allTimezoneList)
         }
@@ -88,7 +88,7 @@ class SearchTimezoneFragment : Fragment(), SearchView.OnQueryTextListener {
             findNavController().navigateUp()
         } else {
             progress_bar_dim_view_container.visibility = View.VISIBLE
-            lifecycleScope.launch(Dispatchers.Main) {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                 viewModel.updateSelectedTimezoneList(updatedTimezoneList)
                 progress_bar_dim_view_container.visibility = View.GONE
                 findNavController().navigateUp()

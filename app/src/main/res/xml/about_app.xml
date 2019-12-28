@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:summary="@string/app_name"
+        android:title="@string/app_name_setting_title"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        android:key="@string/app_version_setting_key"
+        android:title="@string/app_version_setting_title"
+        app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

@@ -95,6 +95,7 @@ class ClockTimezoneListFragment(
     override fun onStart() {
         super.onStart()
         adapter.initialize(this)
+        startUpdatingTime()
         lifecycleScope.launch(Dispatchers.Main) {
             val selectedTimezoneList = viewModel.loadSelectedTimezoneList()
             adapter.updateClockTimezoneList(selectedTimezoneList)

@@ -52,8 +52,8 @@ class ClockDetailFragment(private val timeFormatHelper: TimeFormatHelper) : Base
         return inflater.inflate(R.layout.fragment_clock_detail, container, false)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.loadPrimaryClockTimezone().observe(
                 this@ClockDetailFragment,
@@ -65,6 +65,11 @@ class ClockDetailFragment(private val timeFormatHelper: TimeFormatHelper) : Base
                 }
             )
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        startUpdatingTime()
     }
 
     override fun onStop() {

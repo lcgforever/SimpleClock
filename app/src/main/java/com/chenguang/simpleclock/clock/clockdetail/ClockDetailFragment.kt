@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.chenguang.simpleclock.R
 import com.chenguang.simpleclock.clock.BaseClockFragment
-import com.chenguang.simpleclock.model.ClockTimezone
 import com.chenguang.simpleclock.util.TimeFormatHelper
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_clock_detail.clock_detail_fragment_city_text_view
@@ -37,8 +36,6 @@ class ClockDetailFragment(private val timeFormatHelper: TimeFormatHelper) : Base
     @Inject
     lateinit var viewModel: ClockDetailFragmentViewModel
 
-    private lateinit var primaryClockTimezone: ClockTimezone
-
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
@@ -58,17 +55,17 @@ class ClockDetailFragment(private val timeFormatHelper: TimeFormatHelper) : Base
             viewModel.loadPrimaryClockTimezone().observe(
                 this@ClockDetailFragment,
                 Observer {
-                    primaryClockTimezone = it
-                    timeFormatHelper.updateTimezone(primaryClockTimezone.timezoneId)
-                    clock_detail_fragment_city_text_view.text = primaryClockTimezone.cityName
+                    timeFormatHelper.updateTimezone(it.timezoneId)
+                    clock_detail_fragment_city_text_view.text = it.cityName
+                    onTimeUpdated()
                     startUpdatingTime()
                 }
             )
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         startUpdatingTime()
     }
 

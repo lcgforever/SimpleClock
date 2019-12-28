@@ -132,6 +132,10 @@ class MainClockFragment : Fragment(), MainClockAlarmItemAdapter.AlarmItemListene
     override fun onStart() {
         super.onStart()
         alarmAdapter.initialize(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
         lifecycleScope.launch(Dispatchers.Main) {
             val alarmDataList = viewModel.loadAllAlarms()
             alarmAdapter.updateAlarmDataList(alarmDataList)

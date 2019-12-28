@@ -19,16 +19,6 @@ class ClockTimezoneListFragmentViewModel @Inject constructor(
     private val cityTimezoneDao: CityTimezoneDao
 ) : BaseClockViewModel(cityTimezoneDao) {
 
-//    suspend fun loadSelectedTimezoneList(): LiveData<List<CityTimezone>> {
-//        return withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
-//            val selectedTimezoneList = cityTimezoneDao.getAllCityTimezoneListLiveData()
-//            Transformations.map(selectedTimezoneList) { timezoneList ->
-//                timezoneList
-//                    .sortedWith(compareByDescending(CityTimezone::addTimestamp))
-//            }
-//        }
-//    }
-
     suspend fun loadSelectedTimezoneList(): List<ClockTimezone> {
         return withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
             cityTimezoneDao.getAllCityTimezoneList()

@@ -51,6 +51,7 @@
     <!-- main clock fragment -->
     <string name="alarm_repeat_day_text">S M T W T F S</string>
     <string name="alarm_deleted_message">Deleted one alarm</string>
+    <string name="cannot_edit_alarm_message">Cannot edit disabled alarm</string>
 
     <!-- main clock activity -->
     <string name="alarm_trigger_dialog_title">Alarm Triggered</string>

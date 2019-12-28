@@ -77,6 +77,7 @@ class AlarmHelper @Inject constructor() {
         calendar.set(Calendar.HOUR_OF_DAY, alarmHour)
         calendar.set(Calendar.MINUTE, alarmMinute)
         calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
         // If given hour and minute is in the past for today, set time for tomorrow
         if (calendar.before(currentCal)) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)

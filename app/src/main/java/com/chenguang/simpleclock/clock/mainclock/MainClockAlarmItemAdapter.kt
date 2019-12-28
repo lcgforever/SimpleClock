@@ -83,6 +83,10 @@ class MainClockAlarmItemAdapter(
             itemView.alarm_item_switch.setOnCheckedChangeListener { _, isChecked ->
                 alarmItemListener?.onAlarmStatusChanged(model, isChecked)
             }
+            itemView.setOnClickListener {
+                val enabled = itemView.alarm_item_switch.isChecked
+                alarmItemListener?.onAlarmClicked(model, enabled)
+            }
         }
 
         private fun getRepeatDayText(repeatDayIdList: List<Int>): SpannableString {
@@ -103,6 +107,8 @@ class MainClockAlarmItemAdapter(
     }
 
     interface AlarmItemListener {
+
+        fun onAlarmClicked(alarmData: AlarmData, enabled: Boolean)
 
         fun onAlarmStatusChanged(alarmData: AlarmData, enabled: Boolean)
     }

@@ -1,5 +1,7 @@
 package com.chenguang.simpleclock.addalarm
 
+import android.media.Ringtone
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -13,6 +15,7 @@ import com.chenguang.simpleclock.R
 import com.chenguang.simpleclock.model.AlarmData
 import com.chenguang.simpleclock.model.AlarmSound
 import com.chenguang.simpleclock.util.AlarmHelper
+import com.chenguang.simpleclock.util.Constants
 import com.chenguang.simpleclock.util.hideKeyboard
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_alarm_title_edit_text
@@ -46,7 +49,10 @@ class AddAlarmActivity : AppCompatActivity() {
     private val random by lazy { Random() }
     private val defaultAlarmTitle by lazy { getString(R.string.default_alarm_title_text) }
     private val alarmSoundMap = mutableMapOf<String, AlarmSound>()
+    private var alarmSoundList = listOf<AlarmSound>()
+    private var editAlarmData: AlarmData? = null
     private var selectedAlarmSoundUri: Uri? = null
+    private var playingRingtone: Ringtone? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -80,11 +86,26 @@ class AddAlarmActivity : AppCompatActivity() {
             } else false
         }
 
-        add_alarm_activity_cancel_button.setOnClickListener { finishAfterTransition() }
+        add_alarm_activity_cancel_button.setOnClickListener {
+            playingRingtone?.stop()
+            finishAfterTransition()
+        }
 
         lifecycleScope.launch(Dispatchers.Main) {
+            if (intent.hasExtra(Constants.EXTRA_ALARM_ID)) {
+                val editAlarmId = intent.getIntExtra(Constants.EXTRA_ALARM_ID, 0)
+                val editAlarmData = viewModel.getAlarmById(editAlarmId)
+                editAlarmData?.let {
+                    this@AddAlarmActivity.editAlarmData = it
+                    add_alarm_activity_time_picker.currentHour = it.alarmHour
+                    add_alarm_activity_time_picker.currentMinute = it.alarmMinute
+                    add_alarm_activity_alarm_title_edit_text.setText(it.title)
+                    add_alarm_activity_done_fab.setImageResource(R.drawable.ic_check)
+                    repeatDayAdapter.updateSelectedRepeatDayIdList(it.repeatDayIdList)
+                }
+            }
             val context = this@AddAlarmActivity
-            val alarmSoundList = viewModel.fetchAllAlarmSounds(context)
+            alarmSoundList = viewModel.fetchAllAlarmSounds(context)
             add_alarm_activity_load_sound_progress_bar.visibility = View.GONE
             if (alarmSoundList.isEmpty()) {
                 add_alarm_activity_no_sound_text.visibility = View.VISIBLE
@@ -99,6 +120,12 @@ class AddAlarmActivity : AppCompatActivity() {
         spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         add_alarm_activity_sound_spinner.adapter = spinnerAdapter
+        spinnerAdapter.addAll(alarmSoundList.map { it.name })
+        editAlarmData?.soundUri?.let { editAlarmSoundUri ->
+            selectedAlarmSoundUri = editAlarmSoundUri
+            val position = alarmSoundList.indexOfFirst { editAlarmSoundUri == it.uri }
+            add_alarm_activity_sound_spinner.setSelection(position, false)
+        }
         add_alarm_activity_sound_spinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -112,24 +139,53 @@ class AddAlarmActivity : AppCompatActivity() {
                     id: Long
                 ) {
                     spinnerAdapter.getItem(position)?.let {
+                        playingRingtone?.stop()
                         selectedAlarmSoundUri = alarmSoundMap[it]?.uri
+                        selectedAlarmSoundUri?.let { uri ->
+                            val ringtone = RingtoneManager.getRingtone(this@AddAlarmActivity, uri)
+                            playingRingtone = ringtone
+                            ringtone.play()
+                        }
                     }
                 }
 
             }
-        spinnerAdapter.addAll(alarmSoundList.map { it.name })
         add_alarm_activity_sound_spinner.visibility = View.VISIBLE
     }
 
     private fun addAlarmAndFinish() {
+        playingRingtone?.stop()
         progress_bar_dim_view_container.visibility = View.VISIBLE
 
         // Create alarm data with selected time, repeat option and sound
+        val alarmTitle = add_alarm_activity_alarm_title_edit_text.text?.toString()
         val alarmHour = add_alarm_activity_time_picker.currentHour
         val alarmMinute = add_alarm_activity_time_picker.currentMinute
         val selectedRepeatDays = repeatDayAdapter.getSortedSelectedDayIdList()
         val alarmTime = alarmHelper.getAvailableAlarmTime(alarmHour, alarmMinute)
+
+        editAlarmData?.let {
+            if (alarmTitle == it.title &&
+                alarmTime == it.timeMillis &&
+                alarmHour == it.alarmHour &&
+                alarmMinute == it.alarmMinute &&
+                selectedAlarmSoundUri == it.soundUri &&
+                selectedRepeatDays.toTypedArray().contentDeepEquals(
+                    it.repeatDayIdList.toTypedArray()
+                )
+            ) {
+                // If nothing changed, directly return
+                finishAfterTransition()
+                return
+            } else {
+                // Cancel previously set alarm
+                alarmHelper.cancelAlarmInBackground(applicationContext, it)
+            }
+        }
+
         val alarmData = createAlarmData(
+            id = editAlarmData?.id,
+            title = alarmTitle,
             timeMillis = alarmTime,
             alarmHour = alarmHour,
             alarmMinute = alarmMinute,
@@ -142,21 +198,21 @@ class AddAlarmActivity : AppCompatActivity() {
 
         // Save alarm data to database
         lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.insertAlarm(alarmData)
-            progress_bar_dim_view_container.visibility = View.GONE
+            viewModel.insertOrUpdateAlarm(alarmData)
             finishAfterTransition()
         }
     }
 
     private fun createAlarmData(
+        id: Int?,
+        title: String?,
         timeMillis: Long,
         alarmHour: Int,
         alarmMinute: Int,
         repeatDayIdList: List<Int>,
         soundUri: Uri?
     ): AlarmData {
-        val alarmId = random.nextInt()
-        val title = add_alarm_activity_alarm_title_edit_text.text?.toString()
+        val alarmId = id ?: random.nextInt()
         val alarmTitle = if (title.isNullOrEmpty()) defaultAlarmTitle else title
         return AlarmData(
             id = alarmId,

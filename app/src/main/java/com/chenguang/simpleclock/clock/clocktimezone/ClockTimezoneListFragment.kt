@@ -89,6 +89,7 @@ class ClockTimezoneListFragment(
                 Observer {
                     primaryClockTimezone = it
                     timeFormatHelper.updateTimezone(primaryClockTimezone.timezoneId)
+                    onTimeUpdated()
                     startUpdatingTime()
                 }
             )
@@ -98,6 +99,10 @@ class ClockTimezoneListFragment(
     override fun onStart() {
         super.onStart()
         adapter.initialize(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
         startUpdatingTime()
         lifecycleScope.launch(Dispatchers.Main) {
             val selectedTimezoneList = viewModel.loadSelectedTimezoneList()

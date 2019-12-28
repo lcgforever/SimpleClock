@@ -1,14 +1,13 @@
 package com.chenguang.simpleclock.clock.mainclock
 
-import android.app.ActivityOptions
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +15,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.chenguang.simpleclock.R
-import com.chenguang.simpleclock.addalarm.AddAlarmActivity
 import com.chenguang.simpleclock.clock.clockdetail.ClockDetailFragment
 import com.chenguang.simpleclock.clock.clocktimezone.ClockTimezoneListFragment
 import com.chenguang.simpleclock.model.AlarmData
@@ -119,7 +117,7 @@ class MainClockFragment : Fragment(), MainClockAlarmItemAdapter.AlarmItemListene
         main_clock_fragment_view_pager.currentItem = 0
 
         main_clock_fragment_add_alarm_button.setOnClickListener {
-            startAddAlarmActivity()
+            startAddAlarmFragment()
         }
 
         main_clock_fragment_alarm_recycler_view.layoutManager = LinearLayoutManager(context!!)
@@ -132,10 +130,6 @@ class MainClockFragment : Fragment(), MainClockAlarmItemAdapter.AlarmItemListene
     override fun onStart() {
         super.onStart()
         alarmAdapter.initialize(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
         lifecycleScope.launch(Dispatchers.Main) {
             val alarmDataList = viewModel.loadAllAlarms()
             alarmAdapter.updateAlarmDataList(alarmDataList)
@@ -149,7 +143,7 @@ class MainClockFragment : Fragment(), MainClockAlarmItemAdapter.AlarmItemListene
 
     override fun onAlarmClicked(alarmData: AlarmData, enabled: Boolean) {
         if (enabled) {
-            startAddAlarmActivity(alarmId = alarmData.id)
+            startAddAlarmFragment(alarmId = alarmData.id)
         } else {
             Snackbar.make(
                 main_clock_fragment_alarm_recycler_view,
@@ -168,10 +162,11 @@ class MainClockFragment : Fragment(), MainClockAlarmItemAdapter.AlarmItemListene
         }
     }
 
-    private fun startAddAlarmActivity(alarmId: Int? = null) {
-        val intent = Intent(context, AddAlarmActivity::class.java)
-        alarmId?.let { intent.putExtra(Constants.EXTRA_ALARM_ID, it) }
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle())
+    private fun startAddAlarmFragment(alarmId: Int? = null) {
+        val bundle = Bundle().apply {
+            alarmId?.let { putInt(Constants.EXTRA_ALARM_ID, it) }
+        }
+        findNavController().navigate(R.id.action_mainClockFragment_to_addAlarmFragment, bundle)
     }
 
     inner class ClockFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {

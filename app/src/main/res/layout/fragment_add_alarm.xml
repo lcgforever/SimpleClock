@@ -7,10 +7,10 @@
     android:layout_marginBottom="@dimen/padding_navigation_bar"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="com.chenguang.simpleclock.addalarm.AddAlarmActivity">
+    tools:context="com.chenguang.simpleclock.addalarm.AddAlarmFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_alarm_activity_done_fab"
+        android:id="@+id/add_alarm_fragment_done_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
@@ -20,14 +20,14 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TimePicker
-        android:id="@+id/add_alarm_activity_time_picker"
+        android:id="@+id/add_alarm_fragment_time_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:timePickerMode="clock"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/add_alarm_activity_cancel_button"
+        android:id="@+id/add_alarm_fragment_cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/add_alarm_activity_alarm_title_edit_text"
+        android:id="@+id/add_alarm_fragment_alarm_title_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -52,10 +52,10 @@
         android:imeOptions="actionDone"
         android:inputType="textCapWords"
         android:maxLines="1"
-        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_time_picker" />
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_fragment_time_picker" />
 
     <TextView
-        android:id="@+id/add_alarm_activity_repeat_option_text"
+        android:id="@+id/add_alarm_fragment_repeat_option_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -64,19 +64,19 @@
         android:textAppearance="@style/TextMediumBlack"
         android:textColor="@color/color_accent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_alarm_title_edit_text" />
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_fragment_alarm_title_edit_text" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/add_alarm_activity_repeat_recycler_view"
+        android:id="@+id/add_alarm_fragment_repeat_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:paddingStart="@dimen/alarm_repeat_option_parent_padding"
         android:paddingEnd="@dimen/alarm_repeat_option_parent_padding"
-        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_repeat_option_text" />
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_fragment_repeat_option_text" />
 
     <TextView
-        android:id="@+id/add_alarm_activity_sound_option_text"
+        android:id="@+id/add_alarm_fragment_sound_option_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -85,20 +85,20 @@
         android:textAppearance="@style/TextMediumBlack"
         android:textColor="@color/color_accent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_repeat_recycler_view" />
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_fragment_repeat_recycler_view" />
 
     <FrameLayout
-        android:id="@+id/add_alarm_activity_sound_view_container"
+        android:id="@+id/add_alarm_fragment_sound_view_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="24dp"
         android:animateLayoutChanges="true"
-        app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_sound_option_text">
+        app:layout_constraintTop_toBottomOf="@id/add_alarm_fragment_sound_option_text">
 
         <ProgressBar
-            android:id="@+id/add_alarm_activity_load_sound_progress_bar"
+            android:id="@+id/add_alarm_fragment_load_sound_progress_bar"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
             android:indeterminate="true" />
 
         <TextView
-            android:id="@+id/add_alarm_activity_no_sound_text"
+            android:id="@+id/add_alarm_fragment_no_sound_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/no_available_sound_text"
@@ -114,13 +114,13 @@
             android:visibility="gone" />
 
         <Spinner
-            android:id="@+id/add_alarm_activity_sound_spinner"
+            android:id="@+id/add_alarm_fragment_sound_spinner"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:spinnerMode="dropdown"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/add_alarm_activity_sound_option_text" />
+            app:layout_constraintTop_toBottomOf="@id/add_alarm_fragment_sound_option_text" />
 
     </FrameLayout>
 

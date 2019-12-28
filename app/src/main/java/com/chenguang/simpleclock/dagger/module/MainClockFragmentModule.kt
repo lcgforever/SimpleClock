@@ -20,6 +20,8 @@ import dagger.multibindings.IntoMap
     includes = [
         ClockDetailFragmentModule::class,
         ClockTimezoneListFragmentModule::class,
+        SearchTimezoneFragmentModule::class,
+        AddAlarmFragmentModule::class,
         MainClockFragmentViewModelKeyModule::class
     ]
 )

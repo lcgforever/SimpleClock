@@ -13,8 +13,6 @@
         android:roundIcon="@drawable/ic_clock_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".addalarm.AddAlarmActivity" />
-        <activity android:name=".searchtimezone.SearchTimezoneActivity" />
         <activity
             android:name=".clock.MainClockActivity"
             android:launchMode="singleTask"

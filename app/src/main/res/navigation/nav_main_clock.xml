@@ -9,6 +9,30 @@
         android:id="@+id/mainClockFragment"
         android:name="com.chenguang.simpleclock.clock.mainclock.MainClockFragment"
         android:label="fragment_main_clock"
-        tools:layout="@layout/fragment_main_clock" />
+        tools:layout="@layout/fragment_main_clock">
+        <action
+            android:id="@+id/action_mainClockFragment_to_searchTimezoneFragment"
+            app:destination="@id/searchTimezoneFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_mainClockFragment_to_addAlarmFragment"
+            app:destination="@id/addAlarmFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchTimezoneFragment"
+        android:name="com.chenguang.simpleclock.searchtimezone.SearchTimezoneFragment"
+        android:label="SearchTimezoneFragment" />
+    <fragment
+        android:id="@+id/addAlarmFragment"
+        android:name="com.chenguang.simpleclock.addalarm.AddAlarmFragment"
+        android:label="fragment_add_alarm"
+        tools:layout="@layout/fragment_add_alarm" />
 
 </navigation>

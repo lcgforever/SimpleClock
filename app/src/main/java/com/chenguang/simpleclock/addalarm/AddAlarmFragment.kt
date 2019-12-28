@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -104,6 +105,14 @@ class AddAlarmFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                playingRingtone?.stop()
+                findNavController().navigateUp()
+            }
+        }
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, onBackPressedCallback)
+
         lifecycleScope.launch(Dispatchers.Main) {
             if (arguments?.containsKey(Constants.EXTRA_ALARM_ID) == true) {
                 val editAlarmId = arguments!!.getInt(Constants.EXTRA_ALARM_ID)
@@ -136,7 +145,7 @@ class AddAlarmFragment : Fragment() {
         editAlarmData?.soundUri?.let { editAlarmSoundUri ->
             selectedAlarmSoundUri = editAlarmSoundUri
             val position = alarmSoundList.indexOfFirst { editAlarmSoundUri == it.uri }
-            add_alarm_fragment_sound_spinner.setSelection(position, false)
+            add_alarm_fragment_sound_spinner.setSelection(position)
         }
         add_alarm_fragment_sound_spinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {

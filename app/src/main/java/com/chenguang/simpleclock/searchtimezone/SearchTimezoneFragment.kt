@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -56,23 +57,20 @@ class SearchTimezoneFragment : Fragment(), SearchView.OnQueryTextListener {
         search_timezone_fragment_recycler_view.adapter = adapter
 
         search_timezone_fragment_done_fab.setOnClickListener {
-            val updatedTimezoneList = adapter.getUpdatedTimezoneList()
-            if (updatedTimezoneList.isEmpty()) {
-                findNavController().navigateUp()
-            } else {
-                progress_bar_dim_view_container.visibility = View.VISIBLE
-                lifecycleScope.launch(Dispatchers.Main) {
-                    viewModel.updateSelectedTimezoneList(updatedTimezoneList)
-                    progress_bar_dim_view_container.visibility = View.GONE
-                    findNavController().navigateUp()
-                }
-            }
+            saveSelectedTimezoneListAndFinish()
         }
 
         lifecycleScope.launch(Dispatchers.Main) {
             val allTimezoneList = viewModel.loadAllTimezones()
             adapter.updateSearchCityList(allTimezoneList)
         }
+
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                saveSelectedTimezoneListAndFinish()
+            }
+        }
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, onBackPressedCallback)
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
@@ -82,5 +80,19 @@ class SearchTimezoneFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
+    }
+
+    private fun saveSelectedTimezoneListAndFinish() {
+        val updatedTimezoneList = adapter.getUpdatedTimezoneList()
+        if (updatedTimezoneList.isEmpty()) {
+            findNavController().navigateUp()
+        } else {
+            progress_bar_dim_view_container.visibility = View.VISIBLE
+            lifecycleScope.launch(Dispatchers.Main) {
+                viewModel.updateSelectedTimezoneList(updatedTimezoneList)
+                progress_bar_dim_view_container.visibility = View.GONE
+                findNavController().navigateUp()
+            }
+        }
     }
 }

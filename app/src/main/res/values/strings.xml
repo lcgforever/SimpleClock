@@ -57,4 +57,10 @@
     <string name="alarm_trigger_dialog_title">Alarm Triggered</string>
     <string name="alarm_trigger_dialog_message">Your alarm triggered: %s</string>
 
+    <!-- settings fragment -->
+    <string name="about_app_setting_title">About App</string>
+    <string name="app_name_setting_title">App Name</string>
+    <string name="app_version_setting_title">App Version</string>
+    <string name="copyright_setting_title">Copyright</string>
+
 </resources>

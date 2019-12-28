@@ -51,7 +51,7 @@ class ClockDetailFragment(private val timeFormatHelper: TimeFormatHelper) : Base
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             viewModel.loadPrimaryClockTimezone().observe(
                 this@ClockDetailFragment,
                 Observer {

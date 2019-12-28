@@ -1,6 +1,7 @@
 package com.chenguang.simpleclock.clock.mainclock
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.chenguang.simpleclock.R
 import com.chenguang.simpleclock.clock.clockdetail.ClockDetailFragment
 import com.chenguang.simpleclock.clock.clocktimezone.ClockTimezoneListFragment
 import com.chenguang.simpleclock.model.AlarmData
+import com.chenguang.simpleclock.setting.SettingsActivity
 import com.chenguang.simpleclock.util.AlarmHelper
 import com.chenguang.simpleclock.util.Constants
 import com.chenguang.simpleclock.util.SwipeToDeleteCallback
@@ -31,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_ca
 import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_globe_image_view
 import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_indicator_1
 import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_indicator_2
+import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_settings_button
 import kotlinx.android.synthetic.main.fragment_main_clock.main_clock_fragment_view_pager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -120,6 +123,11 @@ class MainClockFragment : Fragment(), MainClockAlarmItemAdapter.AlarmItemListene
             startAddAlarmFragment()
         }
 
+        main_clock_fragment_settings_button.setOnClickListener {
+            val intent = Intent(context, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
         main_clock_fragment_alarm_recycler_view.layoutManager = LinearLayoutManager(context!!)
         alarmAdapter = MainClockAlarmItemAdapter(context!!)
         main_clock_fragment_alarm_recycler_view.adapter = alarmAdapter
@@ -130,7 +138,7 @@ class MainClockFragment : Fragment(), MainClockAlarmItemAdapter.AlarmItemListene
     override fun onStart() {
         super.onStart()
         alarmAdapter.initialize(this)
-        lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val alarmDataList = viewModel.loadAllAlarms()
             alarmAdapter.updateAlarmDataList(alarmDataList)
         }

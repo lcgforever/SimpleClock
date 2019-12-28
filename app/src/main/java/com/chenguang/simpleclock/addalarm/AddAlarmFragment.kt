@@ -113,7 +113,7 @@ class AddAlarmFragment : Fragment() {
         }
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, onBackPressedCallback)
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (arguments?.containsKey(Constants.EXTRA_ALARM_ID) == true) {
                 val editAlarmId = arguments!!.getInt(Constants.EXTRA_ALARM_ID)
                 val editAlarmData = viewModel.getAlarmById(editAlarmId)
@@ -218,7 +218,7 @@ class AddAlarmFragment : Fragment() {
         alarmHelper.scheduleAlarmInBackground(context!!.applicationContext, alarmData)
 
         // Save alarm data to database
-        lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             viewModel.insertOrUpdateAlarm(alarmData)
             findNavController().navigateUp()
         }

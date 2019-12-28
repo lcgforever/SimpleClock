@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:title="@string/about_app_setting_title"
+        app:fragment="com.chenguang.simpleclock.setting.AboutAppFragment"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        android:title="@string/copyright_setting_title"
+        app:fragment="com.chenguang.simpleclock.setting.CopyrightFragment"
+        app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

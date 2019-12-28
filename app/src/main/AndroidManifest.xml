@@ -24,6 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".setting.SettingsActivity"
+            android:screenOrientation="portrait" />
 
         <receiver android:name=".AlarmReceiver" />
         <receiver android:name=".BootUpReceiver">

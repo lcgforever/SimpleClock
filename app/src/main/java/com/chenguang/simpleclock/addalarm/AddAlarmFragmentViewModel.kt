@@ -16,9 +16,9 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
- * [ViewModel] for [AddAlarmActivity] to provide alarm sound and other info
+ * [ViewModel] for [AddAlarmFragment] to provide alarm sound and other info
  */
-class AddAlarmActivityViewModel @Inject constructor(
+class AddAlarmFragmentViewModel @Inject constructor(
     private val alarmDao: AlarmDao
 ) : ViewModel() {
 

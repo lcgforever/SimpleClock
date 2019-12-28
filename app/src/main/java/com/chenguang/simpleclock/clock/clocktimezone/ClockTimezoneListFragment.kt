@@ -1,21 +1,19 @@
 package com.chenguang.simpleclock.clock.clocktimezone
 
-import android.app.ActivityOptions
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chenguang.simpleclock.R
 import com.chenguang.simpleclock.clock.BaseClockFragment
 import com.chenguang.simpleclock.model.ClockTimezone
-import com.chenguang.simpleclock.searchtimezone.SearchTimezoneActivity
 import com.chenguang.simpleclock.util.SwipeToDeleteCallback
 import com.chenguang.simpleclock.util.TimeFormatHelper
 import com.google.android.material.snackbar.Snackbar
@@ -79,8 +77,7 @@ class ClockTimezoneListFragment(
         itemTouchHelper.attachToRecyclerView(clock_timezone_list_fragment_recycler_view)
 
         clock_timezone_list_fragment_add_city_button.setOnClickListener {
-            val intent = Intent(context, SearchTimezoneActivity::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle())
+            findNavController().navigate(R.id.action_mainClockFragment_to_searchTimezoneFragment)
         }
 
         lifecycleScope.launch(Dispatchers.Main) {
@@ -99,10 +96,6 @@ class ClockTimezoneListFragment(
     override fun onStart() {
         super.onStart()
         adapter.initialize(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
         startUpdatingTime()
         lifecycleScope.launch(Dispatchers.Main) {
             val selectedTimezoneList = viewModel.loadSelectedTimezoneList()

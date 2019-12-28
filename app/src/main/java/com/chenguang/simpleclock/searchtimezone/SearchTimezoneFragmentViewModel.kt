@@ -13,9 +13,9 @@ import java.util.TimeZone
 import javax.inject.Inject
 
 /**
- * [ViewModel] class for [SearchTimezoneActivity] to provide city and timezone information
+ * [ViewModel] class for [SearchTimezoneFragment] to provide city and timezone information
  */
-class SearchTimezoneActivityViewModel @Inject constructor(
+class SearchTimezoneFragmentViewModel @Inject constructor(
     private val cityTimezoneDao: CityTimezoneDao
 ) : ViewModel() {
 

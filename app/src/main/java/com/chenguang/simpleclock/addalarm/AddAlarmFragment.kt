@@ -1,15 +1,19 @@
 package com.chenguang.simpleclock.addalarm
 
+import android.content.Context
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chenguang.simpleclock.R
 import com.chenguang.simpleclock.model.AlarmData
@@ -17,15 +21,15 @@ import com.chenguang.simpleclock.model.AlarmSound
 import com.chenguang.simpleclock.util.AlarmHelper
 import com.chenguang.simpleclock.util.Constants
 import com.chenguang.simpleclock.util.hideKeyboard
-import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_alarm_title_edit_text
-import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_cancel_button
-import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_done_fab
-import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_load_sound_progress_bar
-import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_no_sound_text
-import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_repeat_recycler_view
-import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_sound_spinner
-import kotlinx.android.synthetic.main.activity_add_alarm.add_alarm_activity_time_picker
+import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_add_alarm.add_alarm_fragment_alarm_title_edit_text
+import kotlinx.android.synthetic.main.fragment_add_alarm.add_alarm_fragment_cancel_button
+import kotlinx.android.synthetic.main.fragment_add_alarm.add_alarm_fragment_done_fab
+import kotlinx.android.synthetic.main.fragment_add_alarm.add_alarm_fragment_load_sound_progress_bar
+import kotlinx.android.synthetic.main.fragment_add_alarm.add_alarm_fragment_no_sound_text
+import kotlinx.android.synthetic.main.fragment_add_alarm.add_alarm_fragment_repeat_recycler_view
+import kotlinx.android.synthetic.main.fragment_add_alarm.add_alarm_fragment_sound_spinner
+import kotlinx.android.synthetic.main.fragment_add_alarm.add_alarm_fragment_time_picker
 import kotlinx.android.synthetic.main.layout_progress_bar.progress_bar_dim_view_container
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,12 +37,12 @@ import java.util.Random
 import javax.inject.Inject
 
 /**
- * Activity class for adding new alarm
+ * Fragment class for adding new alarm
  */
-class AddAlarmActivity : AppCompatActivity() {
+class AddAlarmFragment : Fragment() {
 
     @Inject
-    lateinit var viewModel: AddAlarmActivityViewModel
+    lateinit var viewModel: AddAlarmFragmentViewModel
 
     @Inject
     lateinit var alarmHelper: AlarmHelper
@@ -54,61 +58,69 @@ class AddAlarmActivity : AppCompatActivity() {
     private var selectedAlarmSoundUri: Uri? = null
     private var playingRingtone: Ringtone? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_alarm)
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_add_alarm, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Custom linear layout manager to disable scrolling
-        val layoutManager = object : LinearLayoutManager(
-            this, HORIZONTAL, false
-        ) {
+        val layoutManager = object : LinearLayoutManager(context, HORIZONTAL, false) {
             override fun canScrollHorizontally(): Boolean {
                 return false
             }
         }
-        add_alarm_activity_repeat_recycler_view.layoutManager = layoutManager
-        repeatDayAdapter = AlarmRepeatItemAdapter(this)
-        add_alarm_activity_repeat_recycler_view.adapter = repeatDayAdapter
-        add_alarm_activity_repeat_recycler_view.addItemDecoration(
-            RepeatOptionEvenSpaceItemDecoration(this)
+        add_alarm_fragment_repeat_recycler_view.layoutManager = layoutManager
+        repeatDayAdapter = AlarmRepeatItemAdapter(context!!)
+        add_alarm_fragment_repeat_recycler_view.adapter = repeatDayAdapter
+        add_alarm_fragment_repeat_recycler_view.addItemDecoration(
+            RepeatOptionEvenSpaceItemDecoration(context!!)
         )
 
-        add_alarm_activity_done_fab.setOnClickListener {
+        add_alarm_fragment_done_fab.setOnClickListener {
             addAlarmAndFinish()
         }
 
-        add_alarm_activity_alarm_title_edit_text.setOnEditorActionListener { _, actionId, _ ->
+        add_alarm_fragment_alarm_title_edit_text.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                hideKeyboard(this, add_alarm_activity_alarm_title_edit_text)
-                add_alarm_activity_alarm_title_edit_text.clearFocus()
+                hideKeyboard(context!!, add_alarm_fragment_alarm_title_edit_text)
+                add_alarm_fragment_alarm_title_edit_text.clearFocus()
                 true
             } else false
         }
 
-        add_alarm_activity_cancel_button.setOnClickListener {
+        add_alarm_fragment_cancel_button.setOnClickListener {
             playingRingtone?.stop()
-            finishAfterTransition()
+            findNavController().navigateUp()
         }
 
         lifecycleScope.launch(Dispatchers.Main) {
-            if (intent.hasExtra(Constants.EXTRA_ALARM_ID)) {
-                val editAlarmId = intent.getIntExtra(Constants.EXTRA_ALARM_ID, 0)
+            if (arguments?.containsKey(Constants.EXTRA_ALARM_ID) == true) {
+                val editAlarmId = arguments!!.getInt(Constants.EXTRA_ALARM_ID)
                 val editAlarmData = viewModel.getAlarmById(editAlarmId)
                 editAlarmData?.let {
-                    this@AddAlarmActivity.editAlarmData = it
-                    add_alarm_activity_time_picker.currentHour = it.alarmHour
-                    add_alarm_activity_time_picker.currentMinute = it.alarmMinute
-                    add_alarm_activity_alarm_title_edit_text.setText(it.title)
-                    add_alarm_activity_done_fab.setImageResource(R.drawable.ic_check)
+                    this@AddAlarmFragment.editAlarmData = it
+                    add_alarm_fragment_time_picker.currentHour = it.alarmHour
+                    add_alarm_fragment_time_picker.currentMinute = it.alarmMinute
+                    add_alarm_fragment_alarm_title_edit_text.setText(it.title)
+                    add_alarm_fragment_done_fab.setImageResource(R.drawable.ic_check)
                     repeatDayAdapter.updateSelectedRepeatDayIdList(it.repeatDayIdList)
                 }
             }
-            val context = this@AddAlarmActivity
-            alarmSoundList = viewModel.fetchAllAlarmSounds(context)
-            add_alarm_activity_load_sound_progress_bar.visibility = View.GONE
+            alarmSoundList = viewModel.fetchAllAlarmSounds(context!!)
+            add_alarm_fragment_load_sound_progress_bar.visibility = View.GONE
             if (alarmSoundList.isEmpty()) {
-                add_alarm_activity_no_sound_text.visibility = View.VISIBLE
+                add_alarm_fragment_no_sound_text.visibility = View.VISIBLE
             } else {
                 alarmSoundMap.putAll(alarmSoundList.map { it.name to it })
                 setupSoundSpinner(alarmSoundList)
@@ -117,16 +129,16 @@ class AddAlarmActivity : AppCompatActivity() {
     }
 
     private fun setupSoundSpinner(alarmSoundList: List<AlarmSound>) {
-        spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item)
+        spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        add_alarm_activity_sound_spinner.adapter = spinnerAdapter
+        add_alarm_fragment_sound_spinner.adapter = spinnerAdapter
         spinnerAdapter.addAll(alarmSoundList.map { it.name })
         editAlarmData?.soundUri?.let { editAlarmSoundUri ->
             selectedAlarmSoundUri = editAlarmSoundUri
             val position = alarmSoundList.indexOfFirst { editAlarmSoundUri == it.uri }
-            add_alarm_activity_sound_spinner.setSelection(position, false)
+            add_alarm_fragment_sound_spinner.setSelection(position, false)
         }
-        add_alarm_activity_sound_spinner.onItemSelectedListener =
+        add_alarm_fragment_sound_spinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                     // No-op
@@ -142,7 +154,7 @@ class AddAlarmActivity : AppCompatActivity() {
                         playingRingtone?.stop()
                         selectedAlarmSoundUri = alarmSoundMap[it]?.uri
                         selectedAlarmSoundUri?.let { uri ->
-                            val ringtone = RingtoneManager.getRingtone(this@AddAlarmActivity, uri)
+                            val ringtone = RingtoneManager.getRingtone(context, uri)
                             playingRingtone = ringtone
                             ringtone.play()
                         }
@@ -150,7 +162,7 @@ class AddAlarmActivity : AppCompatActivity() {
                 }
 
             }
-        add_alarm_activity_sound_spinner.visibility = View.VISIBLE
+        add_alarm_fragment_sound_spinner.visibility = View.VISIBLE
     }
 
     private fun addAlarmAndFinish() {
@@ -158,9 +170,9 @@ class AddAlarmActivity : AppCompatActivity() {
         progress_bar_dim_view_container.visibility = View.VISIBLE
 
         // Create alarm data with selected time, repeat option and sound
-        val alarmTitle = add_alarm_activity_alarm_title_edit_text.text?.toString()
-        val alarmHour = add_alarm_activity_time_picker.currentHour
-        val alarmMinute = add_alarm_activity_time_picker.currentMinute
+        val alarmTitle = add_alarm_fragment_alarm_title_edit_text.text?.toString()
+        val alarmHour = add_alarm_fragment_time_picker.currentHour
+        val alarmMinute = add_alarm_fragment_time_picker.currentMinute
         val selectedRepeatDays = repeatDayAdapter.getSortedSelectedDayIdList()
         val alarmTime = alarmHelper.getAvailableAlarmTime(alarmHour, alarmMinute)
 
@@ -175,11 +187,11 @@ class AddAlarmActivity : AppCompatActivity() {
                 )
             ) {
                 // If nothing changed, directly return
-                finishAfterTransition()
+                findNavController().navigateUp()
                 return
             } else {
                 // Cancel previously set alarm
-                alarmHelper.cancelAlarmInBackground(applicationContext, it)
+                alarmHelper.cancelAlarmInBackground(context!!.applicationContext, it)
             }
         }
 
@@ -194,12 +206,12 @@ class AddAlarmActivity : AppCompatActivity() {
         )
 
         // Schedule alarm properly
-        alarmHelper.scheduleAlarmInBackground(applicationContext, alarmData)
+        alarmHelper.scheduleAlarmInBackground(context!!.applicationContext, alarmData)
 
         // Save alarm data to database
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.insertOrUpdateAlarm(alarmData)
-            finishAfterTransition()
+            findNavController().navigateUp()
         }
     }
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chenguang.simpleclock.R
 import com.chenguang.simpleclock.database.AlarmDao
+import com.chenguang.simpleclock.database.toAlarmData
 import com.chenguang.simpleclock.model.AlarmData
 import com.chenguang.simpleclock.model.AlarmSound
 import com.chenguang.simpleclock.model.toAlarmEntity
@@ -60,9 +61,15 @@ class AddAlarmActivityViewModel @Inject constructor(
         }
     }
 
-    suspend fun insertAlarm(alarmData: AlarmData) {
+    suspend fun getAlarmById(alarmId: Int): AlarmData? {
         return withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
-            alarmDao.insertAlarms(alarmData.toAlarmEntity())
+            alarmDao.getAlarmById(alarmId)?.toAlarmData()
+        }
+    }
+
+    suspend fun insertOrUpdateAlarm(alarmData: AlarmData) {
+        return withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
+            alarmDao.insertOrUpdateAlarms(alarmData.toAlarmEntity())
         }
     }
 }

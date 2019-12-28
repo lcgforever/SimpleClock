@@ -41,12 +41,19 @@ class AlarmRepeatItemAdapter(
         return selectedDayIdSet.toList().sorted()
     }
 
+    fun updateSelectedRepeatDayIdList(selectedRepeatDayIdList: List<Int>) {
+        selectedDayIdSet.clear()
+        selectedDayIdSet.addAll(selectedRepeatDayIdList)
+        notifyDataSetChanged()
+    }
+
     inner class AlarmRepeatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(dayInfo: Pair<Int, String>) {
             val dayId = dayInfo.first
             val dayName = dayInfo.second
             itemView.alarm_repeat_item_button.text = dayName
+            itemView.alarm_repeat_item_button.isSelected = selectedDayIdSet.contains(dayId)
             itemView.alarm_repeat_item_button.setOnClickListener {
                 it.isSelected = !it.isSelected
                 if (it.isSelected) {

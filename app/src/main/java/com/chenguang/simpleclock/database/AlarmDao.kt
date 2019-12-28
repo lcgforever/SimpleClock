@@ -2,6 +2,7 @@ package com.chenguang.simpleclock.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 /**
@@ -10,8 +11,8 @@ import androidx.room.Query
 @Dao
 interface AlarmDao {
 
-    @Insert
-    fun insertAlarms(vararg alarmEntity: AlarmEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertOrUpdateAlarms(vararg alarmEntity: AlarmEntity)
 
     @Query("SELECT * FROM alarm WHERE id = :id")
     fun getAlarmById(id: Int): AlarmEntity?

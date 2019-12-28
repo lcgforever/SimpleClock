@@ -42,7 +42,7 @@ class MainClockFragmentViewModel @Inject constructor(
 
     fun insertAlarm(alarmData: AlarmData) {
         viewModelScope.launch(Dispatchers.IO) {
-            alarmDao.insertAlarms(alarmData.toAlarmEntity())
+            alarmDao.insertOrUpdateAlarms(alarmData.toAlarmEntity())
         }
     }
 

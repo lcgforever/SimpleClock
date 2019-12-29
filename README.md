@@ -2,6 +2,8 @@
 
 **SimpleClock** is my sample App demonstrating usage of AndroidX JetPack components.
 
+**Components Used**: Navigation, LiveData, Lifecycle, ViewModel, Room, WorkManager, Preference, Notifications, etc
+
 Product design full credit to Andrii Kotliarenko
 (https://www.uplabs.com/posts/modern-clock-redesign-concept)
 
